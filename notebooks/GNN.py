@@ -30,7 +30,7 @@ lgst_edge_node = jnp.where(
 
 for gi in tqdm(range(1, n_graphs), "Preparing graphs"):
     gi_mask = data_graph_indicator == gi
-    graph_nodes[gi] = jnp.where(gi_mask)[0]
+    graph_nodes[gi] = jnp.where(gi_mask)[0] + 1
     graph_node_features[gi] = data_node_att[gi]
     graph_node_labels[gi] = data_node_label[gi]
     graph_edges[gi] = data_adj[
@@ -45,8 +45,3 @@ graphs = {
 }
 
 graphs[1]
-
-# %%
-
-gi = 1
-g = Graph(V=graph_nodes[gi], E=graph_edges[gi])
