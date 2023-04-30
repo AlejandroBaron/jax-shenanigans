@@ -140,3 +140,5 @@ type_info.json
 
 pdm.lock
 tmp
+.ruff_cache
+data
