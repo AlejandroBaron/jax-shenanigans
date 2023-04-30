@@ -8,6 +8,7 @@ authors = [
 dependencies = [
     "jax>=0.4.8",
     "loguru>=0.7.0",
+    "tqdm>=4.65.0",
 ]
 requires-python = ">=3.9"
 readme = "README.md"
