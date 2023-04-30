@@ -1,4 +1,5 @@
 from typing import Union
+
 from jax.numpy import ndarray as jax_ndarray
 from numpy import ndarray
 
