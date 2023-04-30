@@ -11,13 +11,13 @@ from jax_shenanigans.utils.typing import is_jax_array
 
 class Graph:
     @staticmethod
-    def sparse_E(edges, n_vertex):
+    def edges_to_BCOO(edges, n_nodes):
         data = jnp.ones(len(edges))
-        shape = (n_vertex, n_vertex)
+        shape = (n_nodes, n_nodes)
         return BCOO((data, edges), shape=shape)
 
     @staticmethod
-    def calc_A_hat(A):
+    def calc_adj_hat(A):
         A_self = fill_diagonal(A, 1)  # A with self connections
         D = jnp.zeros_like(A, dtype=A.dtype)
         D = fill_diagonal(D, A.sum(axis=1).flatten())
@@ -26,32 +26,38 @@ class Graph:
 
     def __init__(
         self,
-        V: Union[jnp.ndarray, int],
-        E: Union[jnp.ndarray, BCOO] = None,
-        U: jnp.ndarray = None,
-        A: jnp.ndarray = None,
+        nodes: Union[jnp.ndarray, int],
+        adj_sparse: Union[jnp.ndarray, BCOO] = None,
+        node_features: jnp.ndarray = None,
+        edge_features: jnp.ndarray = None,
+        graph_features: jnp.ndarray = None,
     ):
-        self.V = V
-        self.E = self._process_E(E) or BCOO.from_dense(A)
-        self.U = U
-        self.A = A or self.E.todense()
-        self.A_hat = None
+        self.nodes = nodes
+        self.adj_sparse = self._process_adj_sparse(adj_sparse)
+        self.node_features = node_features
+        self.edge_features = edge_features
+        self.graph_features = graph_features
 
-    def set_A_hat(self):
-        self.A_hat = Graph.calc_A_hat(self.A)
+    @property
+    def adj_dense(self):
+        return self.adj_sparse.todense()
 
-    def _process_E(self, E):
-        if is_jax_array(E):
-            return Graph.sparse_E(E - E.min(), n_vertex=len(self))
-        return E
+    @property
+    def adj_hat(self):
+        return Graph.calc_adj_hat(self.adj_dense)
+
+    def _process_adj_sparse(self, adj_sparse):
+        if is_jax_array(adj_sparse):
+            return Graph.edges_to_BCOO(adj_sparse - adj_sparse.min(), n_nodes=len(self))
+        return adj_sparse
 
     def __len__(self):
-        return len(self.V)
+        return len(self.nodes)
 
     def __repr__(self):
-        A_np = self.A.to_py()
+        A_np = self.adj_dense.to_py()
         A_np = A_np - A_np.min()
         nx_graph = nx.DiGraph(A_np)
-        labels = {i: v for i, v in enumerate(self.V)}
+        labels = {i: v for i, v in enumerate(self.nodes)}
         nx.draw(nx_graph, with_labels=True, labels=labels)
         return ""

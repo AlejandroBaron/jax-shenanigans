@@ -40,8 +40,14 @@ for gi in tqdm(range(1, n_graphs), "Preparing graphs"):
 
 # %%
 graphs = {
-    gi: Graph(V=graph_nodes[gi], E=graph_edges[gi])
+    gi: Graph(
+        nodes=graph_nodes[gi],
+        adj_sparse=graph_edges[gi],
+        node_features=graph_node_features,
+    )
     for gi in tqdm(range(1, n_graphs), "Instantiating graphs")
 }
 
 graphs[1]
+
+# %%
