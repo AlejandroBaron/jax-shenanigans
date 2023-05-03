@@ -18,7 +18,7 @@ data_graph_labels = load_txt("../data/ENZYMES_graph_labels.txt", delimiter=",").
 
 
 # %%
-n_graphs = 5  # data_graph_indicator.max()
+n_graphs = 21  # data_graph_indicator.max()
 graph_nodes = {}
 graph_node_features = {}
 graph_node_labels = {}
@@ -37,17 +37,16 @@ for gi in tqdm(range(1, n_graphs), "Preparing graphs"):
         is_between(lgst_edge_node, graph_nodes[gi].min(), graph_nodes[gi].max())
     ]
 
-
 # %%
 graphs = {
     gi: Graph(
         nodes=graph_nodes[gi],
         adj_sparse=graph_edges[gi],
-        node_features=graph_node_features,
+        node_features=graph_node_features[gi],
     )
     for gi in tqdm(range(1, n_graphs), "Instantiating graphs")
 }
 
-graphs[1]
-
 # %%
+i = 20
+graphs[i]

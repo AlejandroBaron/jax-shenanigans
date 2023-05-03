@@ -6,4 +6,4 @@ def fill_diagonal(x: jnp.ndarray, value: int):
 
 
 def is_between(x: jnp.ndarray, a: int, b: int):
-    return (a <= b) & (x <= b)
+    return (a <= x) & (x <= b)
