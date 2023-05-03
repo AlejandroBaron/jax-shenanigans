@@ -48,5 +48,4 @@ graphs = {
 }
 
 # %%
-i = 20
-graphs[i]
+from jax_shenanigans.dl.layers import GCNLayer

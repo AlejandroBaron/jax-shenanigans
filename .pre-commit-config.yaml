@@ -1,17 +1,3 @@
-# Copyright The Lightning AI team.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 default_language_version:
   python: python3
 
@@ -36,17 +22,6 @@ repos:
       - id: check-case-conflict
       - id: check-added-large-files
         args: ['--maxkb=350', '--enforce-all']
-        exclude: |
-            (?x)^(
-                docs/source-pytorch/_static/images/general/fast_2.gif|
-                docs/source-pytorch/_static/images/mnist_imgs/pt_to_pl.jpg|
-                docs/source-pytorch/_static/images/lightning_module/pt_to_pl.png|
-                docs/source-pytorch/_static/images/general/pl_quick_start_full_compressed.gif|
-                docs/source-pytorch/_static/images/general/pl_overview_flat.jpg|
-                docs/source-pytorch/_static/images/general/pl_overview.gif|
-                src/lightning/fabric/CHANGELOG.md|
-                src/lightning/pytorch/CHANGELOG.md
-            )$
       - id: detect-private-key
 
   - repo: https://github.com/asottile/pyupgrade
@@ -61,17 +36,6 @@ repos:
     hooks:
       - id: docformatter
         args: [--in-place, --wrap-summaries=115, --wrap-descriptions=120]
-
-  - repo: https://github.com/asottile/yesqa
-    rev: v1.4.0
-    hooks:
-      - id: yesqa
-        name: Unused noqa
-        additional_dependencies:
-          #- pep8-naming
-          #- flake8-pytest-style
-          - flake8-bandit
-          - flake8-simplify
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.12.0
@@ -104,14 +68,5 @@ repos:
           - mdformat_frontmatter
         exclude: |
           (?x)^(
-              src/lightning/app/CHANGELOG.md|
-              src/lightning/fabric/CHANGELOG.md|
-              src/lightning/pytorch/CHANGELOG.md|
               README.md
           )$
-
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.0.262'
-    hooks:
-      - id: ruff
-        args: ["--fix"]
