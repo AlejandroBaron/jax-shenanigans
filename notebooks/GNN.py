@@ -31,7 +31,7 @@ lgst_edge_node = jnp.where(
 for gi in tqdm(range(1, n_graphs), "Preparing graphs"):
     gi_mask = data_graph_indicator == gi
     graph_nodes[gi] = jnp.where(gi_mask)[0] + 1
-    graph_node_features[gi] = data_node_att[gi]
+    graph_node_features[gi] = data_node_att[graph_nodes[gi]]
     graph_node_labels[gi] = data_node_label[gi]
     graph_edges[gi] = data_adj[
         is_between(lgst_edge_node, graph_nodes[gi].min(), graph_nodes[gi].max())
@@ -47,5 +47,19 @@ graphs = {
     for gi in tqdm(range(1, n_graphs), "Instantiating graphs")
 }
 
+from jax import random
+from jax.experimental.sparse import BCOO
+
 # %%
 from jax_shenanigans.dl.layers import GCNLayer
+
+# sparse_A = Graph.edges_to_BCOO(edges=data_adj, n_nodes=len(data_graph_indicator))
+
+# %%
+graph = graphs[1]
+A = graph.adj_sparse
+X = graph.node_features
+layer = GCNLayer(n_in=len(graph), n_out=3, key=random.PRNGKey(0))
+
+# %%
+layer(X=X, A=A)

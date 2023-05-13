@@ -9,5 +9,5 @@ class LeakyReLU(Layer):
         self.alpha = alpha
         assert self.alpha <= 0
 
-    def __call__(self, x: jnp.ndarray) -> jnp.ndarray:
-        return jnp.where(x < 0, self.alpha * x, x)  # jax.nn.leaky_relu
+    def forward(self, X: jnp.ndarray) -> jnp.ndarray:
+        return jnp.where(X < 0, self.alpha * X, X)  # jax.nn.leaky_relu
