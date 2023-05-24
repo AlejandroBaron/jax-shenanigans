@@ -14,7 +14,7 @@ class Layer:
         return (self.n_in, self.n_out)
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        self.forward(*args, **kwargs)
+        return jit(self.forward)(*args, **kwargs)
 
     def __repr__(self) -> str:
         return f"{self.name}. Shape: {self.shape}"

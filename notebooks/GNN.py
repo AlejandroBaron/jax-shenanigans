@@ -47,7 +47,8 @@ graphs = {
     for gi in tqdm(range(1, n_graphs), "Instantiating graphs")
 }
 
-from jax import random
+from jax import grad, jacobian, random
+from jax.experimental import sparse
 from jax.experimental.sparse import BCOO
 
 # %%
@@ -55,11 +56,22 @@ from jax_shenanigans.dl.layers import GCNLayer
 
 # sparse_A = Graph.edges_to_BCOO(edges=data_adj, n_nodes=len(data_graph_indicator))
 
-# %%
+
 graph = graphs[1]
 A = graph.adj_sparse
 X = graph.node_features
-layer = GCNLayer(n_in=len(graph), n_out=3, key=random.PRNGKey(0))
+X_b = jnp.expand_dims(X, 0)
+A_b = A.reshape((1,) + A.shape)
 
 # %%
-layer(X=X, A=A)
+from jax_shenanigans.dl.models import Sequential
+
+nfeats = X.shape[-1]
+model = Sequential(
+    layers=[
+        GCNLayer(A, n_in=nfeats, n_out=3, key=random.PRNGKey(0)),
+        GCNLayer(A, n_in=3, n_out=3, key=random.PRNGKey(1)),
+    ]
+)
+
+model(X)
