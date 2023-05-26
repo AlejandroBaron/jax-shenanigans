@@ -18,8 +18,20 @@ BINARY_OPERATORS = [
     "__eq__",
     "__ne__",
     "__matmul__",
+    "__radd__",
+    "__rsub__",
+    "__rmul__",
+    "__rtruediv__",
+    "__rfloordiv__",
+    "__rmod__",
+    "__rpow__",
+    "__rrshift__",
+    "__rlshift__",
+    "__rand__",
+    "__ror__",
+    "__rxor__",
+    "__rmatmul__",
 ]
-
 UNARY_OPERATORS = ["__neg__", "__pos__", "__invert__"]
 
 ASSINGMENT_OPERATORS = [

@@ -1,4 +1,5 @@
 from functools import wraps
+from typing import Any
 
 from jax.numpy import ndarray
 from jaxlib.xla_extension import DeviceArray
@@ -13,15 +14,23 @@ class Tensor(DAGNode):
         self._x = x
 
     def __repr__(self) -> str:
-        return f"jax_shenanigans.Tensor({self._x})"
+        return f"jax_shenanigans.Tensor({self._x}, id={self.id})"
 
 
 def _binary_op_wrap(op_name):
     op = getattr(DeviceArray, op_name)
 
     @wraps(op)
-    def opwrap(self, other: Tensor):
-        return Tensor(op(self._x, other._x), parents=[self, other])
+    def opwrap(self, other: Any):
+        y = other
+        parents = []
+        id = None
+        if isinstance(other, Tensor):
+            y = other._x
+            parents = other.parents
+            id = other.id
+        y_tensor = Tensor(y, parents=parents, id=id)
+        return Tensor(op(self._x, y), parents=[self, y_tensor])
 
     return opwrap
 
