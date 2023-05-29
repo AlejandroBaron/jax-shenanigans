@@ -4,22 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from jax import grad, jit, random
 
-from jax_shenanigans.functions import MSE, MSE_grad
-from jax_shenanigans.utils.performance import with_timing
-
-
-def random_setup(n, p, key):
-    X = random.uniform(key, (n, p - 1))
-    X = jnp.concatenate([jnp.ones((n, 1)), X], axis=1)
-    B = random.randint(key, (p, 1), 0, 10)
-
-    # Internally, random.normal uses a uniform generator.
-    # If the same key is used, the correlation with a
-    # normal distribution is almost 1
-    _, e_key = random.split(key)
-    epsilon = random.normal(e_key, (n, 1)) * 0.3
-    y = X @ B + epsilon
-    return B, X, y
+from jax_shenanigans.dl.losses import MSE, MSE_grad
+from jax_shenanigans.utils.benchmarking import random_linear_setup, with_timing
 
 
 @with_timing(return_t=True, log=False)
@@ -32,7 +18,7 @@ def gradient_descent(gradient_f, w, X, y, epochs: int = 60, lr: float = 7e-1):
 n = 100
 p = 2  # number of parameters including linear bias
 key = random.PRNGKey(0)
-setup = random_setup(n=n, p=p, key=key)
+setup = random_linear_setup(n=n, p=p, key=key)
 
 
 B, X, y = setup
@@ -72,7 +58,7 @@ plt.legend()
 plt.show()
 
 # %%
-B_l, X_l, y_l = random_setup(n**2, p)
+B_l, X_l, y_l = random_linear_setup(n**2, p, key=key)
 B0_l = random.uniform(key, (p, 1))
 B_l_hat, _ = gradient_descent(jit(MSE), B0_l)
 
