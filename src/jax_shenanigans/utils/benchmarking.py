@@ -7,6 +7,15 @@ from loguru import logger
 
 
 def with_timing(return_t: bool = False, log: bool = True):
+    """Decorator that times a function.
+
+    It allows the user to retrieve or log the timing
+
+    Args:
+        return_t (bool, optional): If true, returns a (time, result) tuple
+        log (bool, optional): If true, logs the time through loguru's logger
+    """
+
     def decorator(f):
         @wraps(f)
         def wrap(*args, **kwargs):
